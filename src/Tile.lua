@@ -28,7 +28,7 @@ function Tile:init(x, y, color, variety)
     self.variety = variety
 
     self.score = 50 + (self.variety - 1) * 5
-    self.extraScore = 50 + (self.variety - 1) * 10
+    self.extraScore = 50 + (self.variety - 1) * 50
 end
 
 function Tile:render(x, y)

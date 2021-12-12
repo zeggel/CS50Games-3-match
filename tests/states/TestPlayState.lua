@@ -25,7 +25,7 @@ function TestPlayState:testCalculateMatchScore_sameVariety2()
 
     local result = PlayState.calculateMatchScore(match)
 
-    lu.assertEquals(result, 180)
+    lu.assertEquals(result, 150 + 150)
 end
 
 function TestPlayState:testCalculateMatchScore_sameVariety3()
@@ -33,5 +33,5 @@ function TestPlayState:testCalculateMatchScore_sameVariety3()
 
     local result = PlayState.calculateMatchScore(match)
 
-    lu.assertEquals(result, 150 + 60)
+    lu.assertEquals(result, 150 + 300)
 end
