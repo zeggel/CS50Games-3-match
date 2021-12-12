@@ -26,6 +26,9 @@ function Tile:init(x, y, color, variety)
     -- tile appearance/points
     self.color = color
     self.variety = variety
+
+    self.score = 50 + (self.variety - 1) * 5
+    self.extraScore = 50 + (self.variety - 1) * 10
 end
 
 function Tile:render(x, y)

@@ -234,13 +234,14 @@ function PlayState.calculateMatchScore(match)
     end
 
     local score = 0
-    score = score + #match * 50
     
     if sameVariety() then
-        score = score + (match[1].variety - 1) * 10 * #match
+        for _, tile in pairs(match) do
+            score = score + tile.extraScore
+        end
     else
         for _, tile in pairs(match) do
-            score = score + (tile.variety - 1) * 5
+            score = score + tile.score
         end
     end
 
