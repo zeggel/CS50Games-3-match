@@ -195,7 +195,7 @@ function PlayState:calculateMatches()
 
         -- add score for each match
         for k, match in pairs(matches) do
-            self.score = self.score + #match * 50
+            self:updateScore(match)
             self.timer = self.timer + #match
         end
 
@@ -218,6 +218,36 @@ function PlayState:calculateMatches()
     else
         self.canInput = true
     end
+end
+
+function PlayState.calculateMatchScore(match)
+    local function sameVarity(match)
+        local varity = nil
+        for _, tile in pairs(match) do
+            if varity == nil then
+                varity = tile.varity
+            elseif varity ~= tile.varity then
+                return false
+            end
+        end
+        return true
+    end
+
+    local score = 0
+    score = score + #match * 50
+    for _, tile in pairs(match) do
+        score = score + (tile.variety - 1) * 5
+    end
+
+    if sameVarity(match) then
+        score = score + (match[1].variety - 1) * 10 * #match
+    end
+
+    return score
+end
+
+function PlayState:updateScore(match)
+    self.score = self.score + PlayState.calculateMatchScore(match)
 end
 
 function PlayState:render()
