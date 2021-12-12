@@ -221,12 +221,12 @@ function PlayState:calculateMatches()
 end
 
 function PlayState.calculateMatchScore(match)
-    local function sameVarity(match)
+    local function sameVariety()
         local varity = nil
         for _, tile in pairs(match) do
             if varity == nil then
-                varity = tile.varity
-            elseif varity ~= tile.varity then
+                varity = tile.variety
+            elseif varity ~= tile.variety then
                 return false
             end
         end
@@ -235,12 +235,13 @@ function PlayState.calculateMatchScore(match)
 
     local score = 0
     score = score + #match * 50
-    for _, tile in pairs(match) do
-        score = score + (tile.variety - 1) * 5
-    end
-
-    if sameVarity(match) then
+    
+    if sameVariety() then
         score = score + (match[1].variety - 1) * 10 * #match
+    else
+        for _, tile in pairs(match) do
+            score = score + (tile.variety - 1) * 5
+        end
     end
 
     return score

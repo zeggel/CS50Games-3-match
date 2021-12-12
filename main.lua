@@ -44,7 +44,12 @@ VIRTUAL_HEIGHT = 288
 -- speed at which our background texture will scroll
 BACKGROUND_SCROLL_SPEED = 80
 
-function love.load()
+function love.load(args)
+    if args[1] == '--test' then
+        local lu = require 'lib/luaunit'
+        require 'tests/Runner'
+        os.exit(lu.LuaUnit.run('--pattern', 'test'))
+    end
     
     -- window bar title
     love.window.setTitle('Match 3')
