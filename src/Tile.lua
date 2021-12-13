@@ -46,7 +46,7 @@ function Tile:render(x, y)
 
     if self.shiny then
         love.graphics.setLineWidth(2)
-        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.setColor(1, 215/255, 0, 1)
         love.graphics.rectangle('line', self.x + (VIRTUAL_WIDTH - 272),
         self.y + 16, 32, 32, 4)
     end
