@@ -58,3 +58,37 @@ function TestBoard:test_calculateMatches_noMatches()
 
     lu.assertEquals(result, false)
 end
+
+function TestBoard:test_calculateMatches_simpleHorizontalMatches()
+    local map = [[
+        1 1 1 4 5 7 7 8
+        2 3 4 4 4 7 8 1
+        3 4 5 6 5 5 5 5
+        4 5 6 7 8 1 2 3
+        5 6 7 8 1 2 3 4
+        6 7 8 1 2 3 4 5
+        7 8 1 2 3 4 5 6
+        8 1 2 3 4 5 6 7
+    ]]
+    local board = createBoard(map)
+    
+    local result = board:calculateMatches()
+
+    local expected = {{
+        Tile(3, 1, 1, 1),
+        Tile(2, 1, 1, 1),
+        Tile(1, 1, 1, 1)
+    },{
+        Tile(5, 2, 4, 1),
+        Tile(4, 2, 4, 1),
+        Tile(3, 2, 4, 1)
+    },{
+        Tile(8, 3, 5, 1),
+        Tile(7, 3, 5, 1),
+        Tile(6, 3, 5, 1),
+        Tile(5, 3, 5, 1),
+    }}
+    lu.assertEquals(result, expected)
+end
+
+-- TODO case with 2 matches with shiny in one row
