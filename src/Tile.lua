@@ -13,7 +13,7 @@
 
 Tile = Class{}
 
-function Tile:init(x, y, color, variety)
+function Tile:init(x, y, color, variety, shiny)
     
     -- board positions
     self.gridX = x
@@ -26,7 +26,7 @@ function Tile:init(x, y, color, variety)
     -- tile appearance/points
     self.color = color
     self.variety = variety
-    self.shiny = false
+    self.shiny = shiny or false
 
     self.score = 50 + (self.variety - 1) * 5
     self.extraScore = 50 + (self.variety - 1) * 50

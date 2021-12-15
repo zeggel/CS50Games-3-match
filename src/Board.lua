@@ -99,6 +99,11 @@ function Board:calculateMatches()
 
                     -- add this match to our total matches table
                     table.insert(matches, match)
+                    if hasShinyTile then
+                        matchNum = 1
+                        hasShinyTile = false
+                        break
+                    end
                 end
 
                 matchNum = 1
