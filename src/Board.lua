@@ -65,7 +65,7 @@ function Board:calculateMatches()
         local colorToMatch = self.tiles[y][1].color
 
         matchNum = 1
-        hasShinyTile = false
+        hasShinyTile = self.tiles[y][1].shiny
         
         -- every horizontal tile
         for x = 2, 8 do
@@ -141,25 +141,40 @@ function Board:calculateMatches()
         local colorToMatch = self.tiles[1][x].color
 
         matchNum = 1
+        hasShinyTile = self.tiles[1][x].shiny
 
         -- every vertical tile
         for y = 2, 8 do
             if self.tiles[y][x].color == colorToMatch then
                 matchNum = matchNum + 1
+                hasShinyTile = hasShinyTile or self.tiles[y][x].shiny
             else
                 colorToMatch = self.tiles[y][x].color
 
                 if matchNum >= 3 then
                     local match = {}
 
-                    for y2 = y - 1, y - matchNum, -1 do
-                        table.insert(match, self.tiles[y2][x])
+                    if hasShinyTile then
+                        -- with shiny tile gets all column as match
+                        for y2 = 1, 8 do
+                            table.insert(match, self.tiles[y2][x])
+                        end
+                    else
+                        for y2 = y - 1, y - matchNum, -1 do
+                            table.insert(match, self.tiles[y2][x])
+                        end
                     end
 
                     table.insert(matches, match)
+                    if hasShinyTile then
+                        matchNum = 1
+                        hasShinyTile = false
+                        break
+                    end
                 end
 
                 matchNum = 1
+                hasShinyTile = false
 
                 -- don't need to check last two if they won't be in a match
                 if y >= 7 then
@@ -172,9 +187,16 @@ function Board:calculateMatches()
         if matchNum >= 3 then
             local match = {}
             
-            -- go backwards from end of last row by matchNum
-            for y = 8, 8 - matchNum + 1, -1 do
-                table.insert(match, self.tiles[y][x])
+            if hasShinyTile then
+                -- with shiny tile gets all column as match
+                for y = 1, 8 do
+                    table.insert(match, self.tiles[y][x])
+                end
+            else
+                -- go backwards from end of last row by matchNum
+                for y = 8, 8 - matchNum + 1, -1 do
+                    table.insert(match, self.tiles[y][x])
+                end
             end
 
             table.insert(matches, match)
