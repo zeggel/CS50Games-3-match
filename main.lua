@@ -48,7 +48,7 @@ function love.load(args)
     if args[1] == '--test' then
         local lu = require 'lib/luaunit'
         require 'tests/Runner'
-        os.exit(lu.LuaUnit.run('--pattern', 'test'))
+        os.exit(lu.LuaUnit.run('--pattern', args[2] or 'test'))
     end
     
     -- window bar title
