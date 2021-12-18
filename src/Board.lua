@@ -22,6 +22,10 @@ function Board:init(x, y, level)
     self:initializeTiles()
 end
 
+local function isShiny()
+    return math.random(100) < 10
+end
+
 function Board:initializeTiles()
     self.tiles = {}
 
@@ -34,7 +38,7 @@ function Board:initializeTiles()
             
             -- create a new tile at X,Y with a random color and variety
             local newTile = Tile(tileX, tileY, math.random(18), math.random(math.min(self.level, 6)))
-            newTile.shiny = true
+            newTile.shiny = isShiny()
             table.insert(self.tiles[tileY], newTile)
         end
     end
@@ -263,6 +267,7 @@ function Board:getFallingTiles()
 
                 -- new tile with random color and variety
                 local tile = Tile(x, y, math.random(18), math.random(math.min(self.level, 6)))
+                tile.shiny = isShiny()
                 tile.y = -32
                 self.tiles[y][x] = tile
 
