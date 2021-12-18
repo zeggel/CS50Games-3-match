@@ -53,158 +53,131 @@ end
     last two haven't been a match.
 ]]
 function Board:calculateMatches()
-    local matches = {}
+    ---Find matches in rows
+    ---@param tiles table Tiles of the Board to find
+    ---@return table
+    local function findMatches(tiles)
+        local matches = {}
 
-    -- how many of the same color blocks in a row we've found
-    local matchNum = 1
+        -- how many of the same color blocks in a row we've found
+        local matchNum = 1
 
-    local hasShinyTile = false
+        local hasShinyTile = false
 
-    -- horizontal matches first
-    for y = 1, 8 do
-        local colorToMatch = self.tiles[y][1].color
+        -- horizontal matches first
+        for y = 1, 8 do
+            local colorToMatch = tiles[y][1].color
 
-        matchNum = 1
-        hasShinyTile = self.tiles[y][1].shiny
-        
-        -- every horizontal tile
-        for x = 2, 8 do
+            matchNum = 1
+            hasShinyTile = tiles[y][1].shiny
             
-            -- if this is the same color as the one we're trying to match...
-            if self.tiles[y][x].color == colorToMatch then
-                matchNum = matchNum + 1
-                hasShinyTile = hasShinyTile or self.tiles[y][x].shiny
-            else
+            -- every horizontal tile
+            for x = 2, 8 do
                 
-                -- set this as the new color we want to watch for
-                colorToMatch = self.tiles[y][x].color
+                -- if this is the same color as the one we're trying to match...
+                if tiles[y][x].color == colorToMatch then
+                    matchNum = matchNum + 1
+                    hasShinyTile = hasShinyTile or tiles[y][x].shiny
+                else
+                    
+                    -- set this as the new color we want to watch for
+                    colorToMatch = tiles[y][x].color
 
-                -- if we have a match of 3 or more up to now, add it to our matches table
-                if matchNum >= 3 then
-                    local match = {}
+                    -- if we have a match of 3 or more up to now, add it to our matches table
+                    if matchNum >= 3 then
+                        local match = {}
 
-                    if hasShinyTile then
-                        -- with shiny tile gets all row as match
-                        for x2 = 1, 8 do
-                            table.insert(match, self.tiles[y][x2])
+                        if hasShinyTile then
+                            -- with shiny tile gets all row as match
+                            for x2 = 1, 8 do
+                                table.insert(match, tiles[y][x2])
+                            end
+                        else
+                            -- go backwards from here by matchNum
+                            for x2 = x - 1, x - matchNum, -1 do
+                                
+                                -- add each tile to the match that's in that match
+                                table.insert(match, tiles[y][x2])
+                            end
                         end
-                    else
-                        -- go backwards from here by matchNum
-                        for x2 = x - 1, x - matchNum, -1 do
-                            
-                            -- add each tile to the match that's in that match
-                            table.insert(match, self.tiles[y][x2])
+
+                        -- add this match to our total matches table
+                        table.insert(matches, match)
+                        if hasShinyTile then
+                            matchNum = 1
+                            hasShinyTile = false
+                            break
                         end
                     end
 
-                    -- add this match to our total matches table
-                    table.insert(matches, match)
-                    if hasShinyTile then
-                        matchNum = 1
-                        hasShinyTile = false
+                    matchNum = 1
+                    hasShinyTile = false
+
+                    -- don't need to check last two if they won't be in a match
+                    if x >= 7 then
                         break
                     end
                 end
-
-                matchNum = 1
-                hasShinyTile = false
-
-                -- don't need to check last two if they won't be in a match
-                if x >= 7 then
-                    break
-                end
-            end
-        end
-
-        -- account for the last row ending with a match
-        if matchNum >= 3 then
-            local match = {}
-            
-            if hasShinyTile then
-                -- with shiny tile gets all row as match
-                for x = 1, 8 do
-                    table.insert(match, self.tiles[y][x])
-                end
-            else
-                -- go backwards from end of last row by matchNum
-                for x = 8, 8 - matchNum + 1, -1 do
-                    table.insert(match, self.tiles[y][x])
-                end
             end
 
-            table.insert(matches, match)
-        end
-    end
-
-    -- vertical matches
-    for x = 1, 8 do
-        local colorToMatch = self.tiles[1][x].color
-
-        matchNum = 1
-        hasShinyTile = self.tiles[1][x].shiny
-
-        -- every vertical tile
-        for y = 2, 8 do
-            if self.tiles[y][x].color == colorToMatch then
-                matchNum = matchNum + 1
-                hasShinyTile = hasShinyTile or self.tiles[y][x].shiny
-            else
-                colorToMatch = self.tiles[y][x].color
-
-                if matchNum >= 3 then
-                    local match = {}
-
-                    if hasShinyTile then
-                        -- with shiny tile gets all column as match
-                        for y2 = 1, 8 do
-                            table.insert(match, self.tiles[y2][x])
-                        end
-                    else
-                        for y2 = y - 1, y - matchNum, -1 do
-                            table.insert(match, self.tiles[y2][x])
-                        end
+            -- account for the last row ending with a match
+            if matchNum >= 3 then
+                local match = {}
+                
+                if hasShinyTile then
+                    -- with shiny tile gets all row as match
+                    for x = 1, 8 do
+                        table.insert(match, tiles[y][x])
                     end
-
-                    table.insert(matches, match)
-                    if hasShinyTile then
-                        matchNum = 1
-                        hasShinyTile = false
-                        break
+                else
+                    -- go backwards from end of last row by matchNum
+                    for x = 8, 8 - matchNum + 1, -1 do
+                        table.insert(match, tiles[y][x])
                     end
                 end
 
-                matchNum = 1
-                hasShinyTile = false
-
-                -- don't need to check last two if they won't be in a match
-                if y >= 7 then
-                    break
-                end
+                table.insert(matches, match)
             end
         end
 
-        -- account for the last column ending with a match
-        if matchNum >= 3 then
-            local match = {}
-            
-            if hasShinyTile then
-                -- with shiny tile gets all column as match
-                for y = 1, 8 do
-                    table.insert(match, self.tiles[y][x])
-                end
-            else
-                -- go backwards from end of last row by matchNum
-                for y = 8, 8 - matchNum + 1, -1 do
-                    table.insert(match, self.tiles[y][x])
-                end
-            end
-
-            table.insert(matches, match)
-        end
+        return matches
     end
+
+    ---Create new table with columns as rows
+    ---@param tiles table
+    ---@return table
+    local function transponeTiles(tiles)
+        local transponed = {}
+        for x = 1, 8 do
+            local row = {}
+            for y = 1, 8 do
+                table.insert(row, tiles[y][x])
+            end
+            table.insert(transponed, row)
+        end
+        return transponed
+    end
+
+    ---Create new table with elements of arguments tables
+    ---@param one table
+    ---@param other table
+    ---@return table
+    local function concatTiles(one, other)
+        local result = {}
+        for _, row in pairs(one) do
+            table.insert(result, row)
+        end
+        for _, row in pairs(other) do
+            table.insert(result, row)
+        end
+        return result
+    end
+
+    local rowMatches = findMatches(self.tiles)
+    local columnMatches = findMatches(transponeTiles(self.tiles))
 
     -- store matches for later reference
-    self.matches = matches
+    self.matches = concatTiles(rowMatches, columnMatches)
 
     -- return matches table if > 0, else just return false
     return #self.matches > 0 and self.matches or false
