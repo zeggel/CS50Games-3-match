@@ -11,6 +11,8 @@
     sets of three horizontally or vertically.
 ]]
 
+local availableColors = {1, 7, 11, 17, 4, 8, 12, 16}
+
 Board = Class{}
 
 function Board:init(x, y, level)
@@ -22,8 +24,20 @@ function Board:init(x, y, level)
     self:initializeTiles()
 end
 
-local function isShiny()
-    return math.random(100) < 10
+function Board:createTile(x, y)
+
+    local function isShiny()
+        return math.random(100) < 10
+    end
+
+    local function getRandomColor()
+        return availableColors[math.random(#availableColors)]
+    end
+
+    local newTile = Tile(x, y, getRandomColor(), math.random(math.min(self.level, 6)))
+    newTile.shiny = isShiny()
+
+    return newTile
 end
 
 function Board:initializeTiles()
@@ -37,9 +51,7 @@ function Board:initializeTiles()
         for tileX = 1, 8 do
             
             -- create a new tile at X,Y with a random color and variety
-            local newTile = Tile(tileX, tileY, math.random(18), math.random(math.min(self.level, 6)))
-            newTile.shiny = isShiny()
-            table.insert(self.tiles[tileY], newTile)
+            table.insert(self.tiles[tileY], self:createTile(tileX, tileY))
         end
     end
 
@@ -266,8 +278,7 @@ function Board:getFallingTiles()
             if not tile then
 
                 -- new tile with random color and variety
-                local tile = Tile(x, y, math.random(18), math.random(math.min(self.level, 6)))
-                tile.shiny = isShiny()
+                local tile = self:createTile(x, y)
                 tile.y = -32
                 self.tiles[y][x] = tile
 
