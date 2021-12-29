@@ -293,6 +293,24 @@ function Board:getFallingTiles()
     return tweens
 end
 
+function Board:swapTiles(fromX, fromY, toX, toY)
+    local from = self.tiles[fromY][fromX]
+    local to = self.tiles[toY][toX]
+
+    from.gridX = toX
+    from.gridY = toY
+    to.gridX = fromX
+    to.gridY = fromY
+
+    self.tiles[fromY][fromX] = to
+    self.tiles[toY][toX] = from
+
+    return {
+        [from] = {x = to.x, y = to.y},
+        [to] = {x = from.x, y = from.y}
+    }
+end
+
 function Board:render()
     for y = 1, #self.tiles do
         for x = 1, #self.tiles[1] do
