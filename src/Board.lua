@@ -306,6 +306,33 @@ function Board:swapTiles(fromX, fromY, toX, toY)
     }
 end
 
+function Board:hasMoves()
+    for y = 1, #self.tiles - 1 do
+        for x = 1, #self.tiles[y] do
+            self:swapTiles(x, y, x, y + 1)
+            if self:calculateMatches() then
+                self:swapTiles(x, y, x, y + 1)
+                self.matches = {}
+                return true
+            end
+            self:swapTiles(x, y, x, y + 1)
+
+            if x < #self.tiles[y] then
+                self:swapTiles(x, y, x + 1, y)
+                if self:calculateMatches() then
+                    self:swapTiles(x, y, x + 1, y)
+                    self.matches = {}
+                    return true
+                end
+                self:swapTiles(x, y, x + 1, y)
+            end
+
+            self.matches = {}
+        end
+    end
+    return false
+end
+
 function Board:render()
     for y = 1, #self.tiles do
         for x = 1, #self.tiles[1] do

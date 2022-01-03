@@ -288,3 +288,107 @@ function TestBoard:test_calculateMatches_columnWithTwoShinyMatches()
     }}
     lu.assertEquals(result, expected)
 end
+
+-- Tests for possible moves checking
+
+function TestBoard:test_hasMoves_noPossibleMoves()
+    local map = [[
+        1 2 3 4 5 6 7 8
+        2 3 4 5 6 7 8 1
+        3 4 5 6 7 8 1 2
+        4 5 6 7 8 1 2 3
+        5 6 7 8 1 2 3 4
+        6 7 8 1 2 3 4 5
+        7 8 1 2 3 4 5 6
+        8 1 2 3 4 5 6 7
+    ]]
+    local board = createBoard(map)
+
+    lu.assertEquals(board:hasMoves(), false)
+    lu.assertEquals(board, createBoard(map))
+end
+
+function TestBoard:test_hasMoves_possibleMoveInRowAsBottomTile()
+    local map = [[
+        1 1 3 4 5 6 7 8
+        2 3 1 5 6 7 8 1
+        3 4 5 6 7 8 1 2
+        4 5 6 7 8 1 2 3
+        5 6 7 8 1 2 3 4
+        6 7 8 1 2 3 4 5
+        7 8 1 2 3 4 5 6
+        8 1 2 3 4 5 6 7
+    ]]
+    local board = createBoard(map)
+
+    lu.assertEquals(board:hasMoves(), true)
+    lu.assertEquals(board, createBoard(map))
+end
+
+function TestBoard:test_hasMoves_possibleMoveInRowAsRightTile()
+    local map = [[
+        1 1 3 1 5 6 7 8
+        2 3 4 5 6 7 8 1
+        3 4 5 6 7 8 1 2
+        4 5 6 7 8 1 2 3
+        5 6 7 8 1 2 3 4
+        6 7 8 1 2 3 4 5
+        7 8 1 2 3 4 5 6
+        8 1 2 3 4 5 6 7
+    ]]
+    local board = createBoard(map)
+
+    lu.assertEquals(board:hasMoves(), true)
+    lu.assertEquals(board, createBoard(map))
+end
+
+function TestBoard:test_hasMoves_possibleMoveInRowAsBottomTileInRightSide()
+    local map = [[
+        1 2 3 4 5 1 1 8
+        2 3 4 5 6 7 8 1
+        3 4 5 6 7 8 1 2
+        4 5 6 7 8 1 2 3
+        5 6 7 8 1 2 3 4
+        6 7 8 1 2 3 4 5
+        7 8 1 2 3 4 5 6
+        8 1 2 3 4 5 6 7
+    ]]
+    local board = createBoard(map)
+
+    lu.assertEquals(board:hasMoves(), true)
+    lu.assertEquals(board, createBoard(map))
+end
+
+function TestBoard:test_hasMoves_possibleMoveInInnerRowWithBottomTile()
+    local map = [[
+        1 2 3 4 5 6 7 8
+        2 3 4 5 6 7 8 1
+        3 1 5 1 7 8 1 2
+        4 5 1 7 8 1 2 3
+        5 6 7 8 1 2 3 4
+        6 7 8 1 2 3 4 5
+        7 8 1 2 3 4 5 6
+        8 1 2 3 4 5 6 7
+    ]]
+    local board = createBoard(map)
+
+    lu.assertEquals(board:hasMoves(), true)
+    lu.assertEquals(board, createBoard(map))
+end
+
+function TestBoard:test_hasMoves_possibleMoveInInnerColumnWithRightTile()
+    local map = [[
+        1 2 3 4 5 6 7 8
+        2 3 4 1 6 7 8 1
+        3 4 1 6 7 8 1 2
+        4 5 1 7 8 1 2 3
+        5 6 7 8 1 2 3 4
+        6 7 8 1 2 3 4 5
+        7 8 1 2 3 4 5 6
+        8 1 2 3 4 5 6 7
+    ]]
+    local board = createBoard(map)
+
+    lu.assertEquals(board:hasMoves(), true)
+    lu.assertEquals(board, createBoard(map))
+end
