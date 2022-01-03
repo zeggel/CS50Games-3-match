@@ -297,13 +297,8 @@ function Board:swapTiles(fromX, fromY, toX, toY)
     local from = self.tiles[fromY][fromX]
     local to = self.tiles[toY][toX]
 
-    from.gridX = toX
-    from.gridY = toY
-    to.gridX = fromX
-    to.gridY = fromY
-
-    self.tiles[fromY][fromX] = to
-    self.tiles[toY][toX] = from
+    self.tiles[fromY][fromX] = to:copy(fromX, fromY)
+    self.tiles[toY][toX] = from:copy(toX, toY)
 
     return {
         [from] = {x = to.x, y = to.y},

@@ -32,6 +32,10 @@ function Tile:init(x, y, color, variety, shiny)
     self.extraScore = 50 + (self.variety - 1) * 50
 end
 
+function Tile:copy(x, y, color, variety, shiny)
+    return Tile(x or self.gridX, y or self.gridY, color or self.color, variety or self.variety, shiny or self.shiny)
+end
+
 function Tile:render(x, y)
     
     -- draw shadow
