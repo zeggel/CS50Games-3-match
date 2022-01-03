@@ -2,7 +2,7 @@ local lu = require 'lib/luaunit'
 
 local function mapToTable(map)
     local result = {}
-    for mapRow in string.gmatch(map, '[^\n]+') do
+    for mapRow in string.gmatch(string.gsub(map, '%s*$', ''), '[^\n]+') do
         local row = {}
         for rawElement in string.gmatch(mapRow, '[^%s]+') do
             local element = rawElement:gsub('%s+', '')
