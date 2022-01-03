@@ -168,12 +168,12 @@ end
     to the Board class.
 ]]
 function PlayState:calculateMatches()
-    self.highlightedTile = nil
-
     -- if we have any matches, remove them and tween the falling blocks that result
     local matches = self.board:calculateMatches()
     
     if matches then
+        self.highlightedTile = nil
+
         gSounds['match']:stop()
         gSounds['match']:play()
 
@@ -199,7 +199,21 @@ function PlayState:calculateMatches()
         end)
     
     -- if no matches, we can continue playing
+    elseif self.highlightedTile then
+        gSounds['error']:play()
+
+        local tilesTween = self.board:swapTiles(
+            self.highlightedTile.gridX,
+            self.highlightedTile.gridY,
+            self.boardHighlightX + 1,
+            self.boardHighlightY + 1
+        )
+        Timer.tween(0.1, tilesTween):finish(function()
+            self.highlightedTile = nil
+            self.canInput = true
+        end)
     else
+        self.highlightedTile = nil
         self.canInput = true
     end
 end
