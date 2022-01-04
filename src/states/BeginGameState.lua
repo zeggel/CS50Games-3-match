@@ -61,7 +61,8 @@ function BeginGameState:enter(def)
                 :finish(function()
                     gStateMachine:change('play', {
                         level = self.level,
-                        board = self.board
+                        board = self.board,
+                        score = def.score
                     })
                 end)
             end)

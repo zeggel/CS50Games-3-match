@@ -67,7 +67,7 @@ function PlayState:enter(params)
     self.score = params.score or 0
 
     -- score we have to reach to get to the next level
-    self.scoreGoal = self.level * 1.25 * 1000
+    self.scoreGoal = self.score + self.level * 1.25 * 1000
 
     -- init mouse grid position
     local mouseX, mouseY = self:mouseGridPostition()
@@ -106,7 +106,7 @@ function PlayState:update(dt)
         -- change to begin game state with new level (incremented)
         gStateMachine:change('begin-game', {
             level = self.level + 1,
-            score = self.score
+            score = self.scoreGoal
         })
     end
 
