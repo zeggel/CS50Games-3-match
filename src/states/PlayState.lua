@@ -172,6 +172,7 @@ function PlayState:calculateMatches()
     local matches = self.board:calculateMatches()
     
     if matches then
+        -- need to reset highlightedTile because of next if should not work on next recursive call
         self.highlightedTile = nil
 
         gSounds['match']:stop()
@@ -212,10 +213,13 @@ function PlayState:calculateMatches()
             self.highlightedTile = nil
             self.canInput = true
         end)
-    else
-        self.highlightedTile = nil
-        self.canInput = true
+    elseif not self.board:hasMoves() then
+        gSounds['select']:play()
+        self.board:initializeTiles()
     end
+
+    self.highlightedTile = nil
+    self.canInput = true
 end
 
 function PlayState.calculateMatchScore(match)

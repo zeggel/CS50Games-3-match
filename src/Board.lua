@@ -55,7 +55,7 @@ function Board:initializeTiles()
         end
     end
 
-    while self:calculateMatches() do
+    while self:calculateMatches() or not self:hasMoves() do
         
         -- recursively initialize if matches were returned so we always have
         -- a matchless board on start
