@@ -127,7 +127,7 @@ function Board:calculateMatches()
                     end
 
                     matchNum = 1
-                    hasShinyTile = false
+                    hasShinyTile = tiles[y][x].shiny
 
                     -- don't need to check last two if they won't be in a match
                     if x >= 7 then
