@@ -68,6 +68,11 @@ function PlayState:enter(params)
 
     -- score we have to reach to get to the next level
     self.scoreGoal = self.level * 1.25 * 1000
+
+    -- init mouse grid position
+    local mouseX, mouseY = self:mouseGridPostition()
+    self.mouseX = mouseX
+    self.mouseY = mouseY
 end
 
 function PlayState:update(dt)
@@ -119,10 +124,15 @@ function PlayState:update(dt)
         elseif love.keyboard.wasPressed('right') then
             self.boardHighlightX = math.min(7, self.boardHighlightX + 1)
             gSounds['select']:play()
+        elseif self:mouseMoved() then
+            local x, y = push:toGame(love.mouse.getPosition())
+            self.boardHighlightX = math.max(0, math.min(7, math.floor((x - self.board.x) / 32)))
+            self.boardHighlightY = math.max(0, math.min(7, math.floor((y - self.board.y) / 32)))
+            gSounds['select']:play()
         end
 
         -- if we've pressed enter, to select or deselect a tile...
-        if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+        if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') or love.mouse.wasPressed(1) then
             
             -- if same tile as currently highlighted, deselect
             local x = self.boardHighlightX + 1
@@ -252,6 +262,25 @@ end
 
 function PlayState:updateScore(match)
     self.score = self.score + PlayState.calculateMatchScore(match)
+end
+
+function PlayState:mouseGridPostition()
+    local x, y = push:toGame(love.mouse.getPosition())
+    local gridX = math.max(0, math.min(7, math.floor((x - self.board.x) / 32)))
+    local gridY = math.max(0, math.min(7, math.floor((y - self.board.y) / 32)))
+
+    return gridX, gridY
+end
+
+function PlayState:mouseMoved()
+    local x, y = self:mouseGridPostition()
+    if x ~= self.mouseX or y ~= self.mouseY then
+        self.mouseX = x
+        self.mouseY = y
+        return true
+    end
+    
+    return false
 end
 
 function PlayState:render()

@@ -83,6 +83,9 @@ function love.load(args)
 
     -- initialize input table
     love.keyboard.keysPressed = {}
+
+    -- initialize mouse input table
+    love.mouse.buttonPressed = {}
 end
 
 function love.resize(w, h)
@@ -103,6 +106,14 @@ function love.keyboard.wasPressed(key)
     end
 end
 
+function love.mousepressed(x, y, button)
+    love.mouse.buttonPressed[button] = true
+end
+
+function love.mouse.wasPressed(button)
+    return love.mouse.buttonPressed[button]
+end
+
 function love.update(dt)
     
     -- scroll background, used across all states
@@ -116,6 +127,7 @@ function love.update(dt)
     gStateMachine:update(dt)
 
     love.keyboard.keysPressed = {}
+    love.mouse.buttonPressed = {}
 end
 
 function love.draw()
