@@ -22,6 +22,8 @@ function Board:init(x, y, level)
     self.matches = {}
 
     self:initializeTiles()
+
+    self.deletedTiles = {}
 end
 
 function Board:createTile(x, y)
@@ -206,6 +208,8 @@ end
 function Board:removeMatches()
     for k, match in pairs(self.matches) do
         for k, tile in pairs(match) do
+            tile:vanish()
+            table.insert(self.deletedTiles, tile)
             self.tiles[tile.gridY][tile.gridX] = nil
         end
     end
@@ -333,10 +337,26 @@ function Board:hasMoves()
     return false
 end
 
+function Board:update(dt)
+    local remainingTiles = {}
+    for k, tile in pairs(self.deletedTiles) do
+        tile:update(dt)
+        if (tile.isVanishing) then
+            table.insert(remainingTiles, tile)
+        end
+    end
+
+    self.deletedTiles = remainingTiles
+end
+
 function Board:render()
     for y = 1, #self.tiles do
         for x = 1, #self.tiles[1] do
             self.tiles[y][x]:render(self.x, self.y)
         end
+    end
+
+    for _, tile in pairs(self.deletedTiles) do
+        tile:renderParticles(self.x, self.y)
     end
 end

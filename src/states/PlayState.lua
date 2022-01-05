@@ -168,6 +168,8 @@ function PlayState:update(dt)
         end
     end
 
+    self.board:update(dt)
+
     Timer.update(dt)
 end
 
