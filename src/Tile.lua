@@ -76,8 +76,6 @@ function Tile:init(x, y, color, variety, shiny)
     self.extraScore = 50 + (self.variety - 1) * 50
 
     self.isVanishing = false
-
-    self:initParticleSystem()
 end
 
 function Tile:initParticleSystem()
@@ -103,6 +101,7 @@ function Tile:copy(x, y, color, variety, shiny)
 end
 
 function Tile:vanish()
+    self:initParticleSystem()
     self.isVanishing = true
     self:emit()
 end
@@ -125,9 +124,11 @@ function Tile:emit()
 end
 
 function Tile:update(dt)
-    self.psystem:update(dt)
-    if self.psystem:getCount() == 0 then
-        self.isVanishing = false
+    if self.isVanishing then
+        self.psystem:update(dt)
+        if self.psystem:getCount() == 0 then
+            self.isVanishing = false
+        end
     end
 end
 
@@ -152,5 +153,7 @@ function Tile:render(x, y)
 end
 
 function Tile:renderParticles(x, y)
-    love.graphics.draw(self.psystem, self.x + x + 16, self.y + y + 16)
+    if self.isVanishing then
+        love.graphics.draw(self.psystem, self.x + x + 16, self.y + y + 16)
+    end
 end
