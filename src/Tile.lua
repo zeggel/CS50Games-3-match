@@ -13,6 +13,50 @@
 
 Tile = Class{}
 
+local paletteColors = {
+    -- 1, 7, 11, 17, 4, 8, 12, 16
+    [1] = {
+        ['r'] = 217,
+        ['g'] = 160,
+        ['b'] = 102
+    },
+    [7] = {
+        ['r'] = 75,
+        ['g'] = 105,
+        ['b'] = 47
+    },
+    [11] = {
+        ['r'] = 91,
+        ['g'] = 110,
+        ['b'] = 225
+    },
+    [17] = {
+        ['r'] = 118,
+        ['g'] = 66,
+        ['b'] = 138
+    },
+    [4] = {
+        ['r'] = 217,
+        ['g'] = 87,
+        ['b'] = 99
+    },
+    [8] = {
+        ['r'] = 107,
+        ['g'] = 57,
+        ['b'] = 49
+    },
+    [12] = {
+        ['r'] = 223,
+        ['g'] = 113,
+        ['b'] = 38
+    },
+    [16] = {
+        ['r'] = 105,
+        ['g'] = 106,
+        ['b'] = 106
+    }
+}
+
 function Tile:init(x, y, color, variety, shiny)
     
     -- board positions
@@ -68,13 +112,13 @@ function Tile:emit()
     -- it our self.color but with varying alpha; brighter for higher tiers, fading to 0
     -- over the particle's lifetime (the second color)
     self.psystem:setColors(
-        1,
-        215 / 255,
-        0,
+        paletteColors[self.color].r / 255,
+        paletteColors[self.color].g / 255,
+        paletteColors[self.color].b / 255,
         55 * (self.variety + 1) / 255,
-        1,
-        215 / 255,
-        0,
+        paletteColors[self.color].r / 255,
+        paletteColors[self.color].g / 255,
+        paletteColors[self.color].b / 255,
         0
     )
     self.psystem:emit(64)
